@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Angular and Laravel</title>
@@ -15,8 +16,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Faker/3.1.0/faker.min.js"></script>
     <script src="dist/app.min.js"></script>
 </head>
+
 <body ng-app="app">
     <div ng-view></div>
 </body>
-</html>
 
+</html>
