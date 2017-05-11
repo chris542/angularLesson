@@ -1,18 +1,23 @@
 var gulp = require("gulp")
 var babel = require('gulp-babel')
-var order = require( "gulp-order" )
-var watch = require( "gulp-watch" )
+var order = require("gulp-order")
+var watch = require("gulp-watch")
 var concat = require("gulp-concat")
-var notify = require( "gulp-notify" )
-var uglify = require( "gulp-uglify" )
-var plumber = require( "gulp-plumber" )
-var annotate = require( "gulp-ng-annotate" )
-var php = require( "gulp-connect-php" )
-var browserSync = require( "browser-sync" )
+var notify = require("gulp-notify")
+var uglify = require("gulp-uglify")
+var plumber = require("gulp-plumber")
+var annotate = require("gulp-ng-annotate")
+var php = require("gulp-connect-php")
+var browserSync = require("browser-sync")
+var templateCache = require("gulp-angular-templatecache")
+var add = require("gulp-add-src")
+var insert = require("gulp-insert")
+var replace = require("gulp-replace")
 
 var paths = {
     angular : {
-        js: ['public/angular/*.js', 'public/angular/**/*.js']
+        js: ['public/angular/*.js', 'public/angular/**/*.js'],
+        views: ['public/angular/*.html', 'public/angular/**/*.html']
     },
     output: 'public/dist'
 }
@@ -24,6 +29,10 @@ var plumberOptions = {
 gulp.task('angular', function() {
     var stream = gulp.src(paths.angular.js)
         .pipe(plumber(plumberOptions))
+        .pipe(replace(/\t/g, ''))
+        .pipe(replace(/\n/g, ''))
+        .pipe(templateCache('templates.js', {module: 'app.views'}))
+        .pipe(add(paths.angular.js))
         .pipe(order(['app.js']))
         .pipe(babel({
             presets: ['es2015']
@@ -38,6 +47,7 @@ gulp.task('angular', function() {
 
 gulp.task('watch', ['angular'], function(){
     gulp.watch(paths.angular.js, ['angular'])
+    gulp.watch(paths.angular.views, ['angular'])
 
     php.server({
         base:'public',
